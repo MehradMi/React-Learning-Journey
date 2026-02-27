@@ -79,38 +79,37 @@ const Menu = () => {
 	);
 }
 
+const Order = ({closingHour, openHour}) => {
+	return (
+		<div className="order">
+			<p className="footer"> We're open from {openHour}:00 until {closingHour}:00 </p>
+			<button className="btn">Order</button>
+		</div>
+	);	
+}
+
 const Footer = () => {
 	const hour = new Date().getHours();
 	const openningHour = 12;
 	const closingHour = 22;
 	const isOpen = hour >= openningHour && hour <= closingHour;
-	if (isOpen) {
-		return (
-			<div>
-				<footer className="footer">
-					We're currently open!
-				</footer>
-			</div>
-		);
-	} else {
-		return (
-			<div className="footer">
-				<footer>
-					Sorry we're closed!
-				</footer>
-			</div>
-		);
-	}
+	return (
+		<footer className="footer">
+			{isOpen && (
+				<Order closingHour={closingHour} openHour={openningHour}/>
+			)}
+		</footer>
+	);
 }
 
-const Pizza = (props) => {
+const Pizza = ( { pizzaObj} ) => {
 	return (
 		<li className="pizza">
-			<img src={props.pizzaObj.photo_src} alt={props.pizzaObj.name} />
+			<img src={pizzaObj.photo_src} alt={pizzaObj.name} />
 			<div>
-				<h3>{props.pizzaObj.name}</h3>
-				<p>{props.pizzaObj.ingredients}</p>
-				<span>{props.pizzaObj.price}</span>
+				<h3>{pizzaObj.name}</h3>
+				<p>{pizzaObj.ingredients}</p>
+				<span>{pizzaObj.price}</span>
 			</div>
 		</li>
 	);
