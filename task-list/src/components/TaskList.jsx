@@ -1,4 +1,3 @@
-import { useState } from "react";
 import TaskItem from "./TaskItem";
 
 function TaskList({activeTasks, deleteTask, completeTask}) {
