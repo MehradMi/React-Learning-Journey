@@ -1,4 +1,4 @@
-function TaksItem({task, completeTask, deleteTask}) {
+function TaskItem({task, completeTask, deleteTask}) {
 	const { title, priority, deadline, id, completed } = task; // obj destructuring
 
 	return (
