@@ -7,6 +7,7 @@ function App() {
   const [city, setCity] = useState("New-York");
   const [weatherData, setWeatherData] = useState(null);
   const [error, setError] = useState(null);
+	const [loading, setLoading] = useState(false);
 
   const handleInput = (e) => {
     setCity(e.target.value);
@@ -14,6 +15,7 @@ function App() {
 
   useEffect(() => {
     async function getData() {
+			setLoading(true);
       try {
         const res = await fetch(
           `https://api.weatherapi.com/v1/current.json?key=${KEY}&q=${city}`,
@@ -29,10 +31,45 @@ function App() {
       } catch (err) {
         setError(err.message);
         setWeatherData(null);
-      }
+      } finally {
+				setLoading(false);
+			}
     }
     getData();
   }, [city]);
+	
+	const renderLoading = () => {
+		return <p>Loading...</p>;
+          
+	}
+
+	const renderError = () => {
+		return <p>{error}</p> ;	
+	}
+
+	const renderWeather = () => {
+		return (
+					<div className="weather-card">
+						<h2>{`${weatherData?.location.name}, ${weatherData?.location.country}`}</h2>
+						<img
+							src={`https://${weatherData?.current?.condition?.icon}`}
+							alt="icon"
+							className="weather-icon"
+						/>
+						<p className="temperature">
+							{Math.round(weatherData?.current?.temp_c)}°C
+						</p>
+						<p className="condition">
+							{weatherData?.current?.condition?.text}
+						</p>
+						<div className="weather-details">
+							<p>Humidity: {Math.round(weatherData?.current?.humidity)}%</p>
+							<p>Wind: {Math.round(weatherData?.current?.wind_kph)} km/h</p>
+						</div>
+					</div>
+			
+		);
+	}
 
   return (
     <div className="app">
@@ -49,22 +86,11 @@ function App() {
             />
           </div>
         </div>
-        <div className="weather-card">
-          <h2>{`${weatherData?.location.name}, ${weatherData?.location.country}`}</h2>
-          <img
-            src={`https://${weatherData?.current?.condition?.icon}`}
-            alt="icon"
-            className="weather-icon"
-          />
-          <p className="temperature">
-            {Math.round(weatherData?.current?.temp_c)}°C
-          </p>
-          <p className="condition">{weatherData?.current?.condition?.text}</p>
-          <div className="weather-details">
-            <p>Humidity: {Math.round(weatherData?.current?.humidity)}%</p>
-            <p>Wind: {Math.round(weatherData?.current?.wind_kph)} km/h</p>
-          </div>
-        </div>
+        {loading
+          ? renderLoading()
+          : error
+            ? renderError()
+            : weatherData && renderWeather()}
       </div>
     </div>
   );
